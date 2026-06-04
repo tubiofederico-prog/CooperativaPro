@@ -7,25 +7,6 @@ import { Button } from '@/components/ui/Button';
 import { Table } from '@/components/ui/Table';
 import { Badge } from '@/components/ui/Badge';
 import { mockData } from '@/data/mockData';
-import {
-  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell
-} from 'recharts';
-
-const chartData = [
-  { mes: 'Ene', creditos: 45, aprob: 32, rech: 8 },
-  { mes: 'Feb', creditos: 52, aprob: 40, rech: 6 },
-  { mes: 'Mar', creditos: 48, aprob: 38, rech: 7 },
-  { mes: 'Abr', creditos: 61, aprob: 48, rech: 10 },
-  { mes: 'May', creditos: 55, aprob: 44, rech: 8 },
-  { mes: 'Jun', creditos: 67, aprob: 54, rech: 9 },
-];
-
-const creditosPorTipo = [
-  { name: 'Ordinario', value: 450, fill: '#0891b2' },
-  { name: 'Emergente', value: 220, fill: '#10b981' },
-  { name: 'Décimos', value: 180, fill: '#f59e0b' },
-  { name: 'Utilidades', value: 120, fill: '#8b5cf6' },
-];
 
 export default function DashboardPage() {
   const [showModal, setShowModal] = useState(false);
@@ -85,45 +66,59 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Gráficos */}
+        {/* Gráficos Simples */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-2">
             <h2 className="text-lg font-bold text-gray-900 mb-4">Solicitudes de Crédito (últimos 6 meses)</h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                <XAxis dataKey="mes" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="creditos" name="Total Solicitudes" fill="#0891b2" radius={[8, 8, 0, 0]} />
-                <Bar dataKey="aprob" name="Aprobadas" fill="#10b981" radius={[8, 8, 0, 0]} />
-                <Bar dataKey="rech" name="Rechazadas" fill="#ef4444" radius={[8, 8, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="space-y-4">
+              {[
+                { mes: 'Ene', creditos: 45, aprob: 32, rech: 8 },
+                { mes: 'Feb', creditos: 52, aprob: 40, rech: 6 },
+                { mes: 'Mar', creditos: 48, aprob: 38, rech: 7 },
+                { mes: 'Abr', creditos: 61, aprob: 48, rech: 10 },
+                { mes: 'May', creditos: 55, aprob: 44, rech: 8 },
+                { mes: 'Jun', creditos: 67, aprob: 54, rech: 9 },
+              ].map((item) => (
+                <div key={item.mes}>
+                  <div className="flex justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">{item.mes}</span>
+                    <span className="text-xs text-gray-500">{item.creditos} total</span>
+                  </div>
+                  <div className="flex gap-1 h-8">
+                    <div className="flex-1 bg-accent rounded" style={{ maxWidth: `${(item.creditos / 70) * 100}%` }} title={`Total: ${item.creditos}`}></div>
+                    <div className="flex-1 bg-green-500 rounded" style={{ maxWidth: `${(item.aprob / 70) * 100}%` }} title={`Aprobadas: ${item.aprob}`}></div>
+                    <div className="flex-1 bg-red-500 rounded" style={{ maxWidth: `${(item.rech / 70) * 100}%` }} title={`Rechazadas: ${item.rech}`}></div>
+                  </div>
+                </div>
+              ))}
+              <div className="flex gap-4 text-sm pt-4 border-t">
+                <div className="flex items-center gap-2"><div className="w-3 h-3 bg-accent rounded"></div><span>Total</span></div>
+                <div className="flex items-center gap-2"><div className="w-3 h-3 bg-green-500 rounded"></div><span>Aprobadas</span></div>
+                <div className="flex items-center gap-2"><div className="w-3 h-3 bg-red-500 rounded"></div><span>Rechazadas</span></div>
+              </div>
+            </div>
           </Card>
 
           <Card>
             <h2 className="text-lg font-bold text-gray-900 mb-4">Créditos por Tipo</h2>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={creditosPorTipo}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, value }) => `${name}: ${value}`}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {creditosPorTipo.map((entry, idx) => (
-                    <Cell key={`cell-${idx}`} fill={entry.fill} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="space-y-3">
+              {[
+                { name: 'Ordinario', value: 450, color: 'bg-cyan-500' },
+                { name: 'Emergente', value: 220, color: 'bg-green-500' },
+                { name: 'Décimos', value: 180, color: 'bg-yellow-500' },
+                { name: 'Utilidades', value: 120, color: 'bg-purple-500' },
+              ].map((item) => (
+                <div key={item.name}>
+                  <div className="flex justify-between mb-1">
+                    <span className="text-sm font-medium text-gray-700">{item.name}</span>
+                    <span className="text-sm font-bold text-gray-900">{item.value}</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div className={`${item.color} h-2 rounded-full`} style={{ width: `${(item.value / 450) * 100}%` }}></div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </Card>
         </div>
 

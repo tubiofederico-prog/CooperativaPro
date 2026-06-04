@@ -2,11 +2,6 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "functions": {
-    "api/**": {
-      "maxDuration": 60
-    }
-  },
   "env": {
     "NPM_CONFIG_PRODUCTION": "false",
     "NODE_ENV": "production"

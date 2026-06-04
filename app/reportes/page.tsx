@@ -5,8 +5,6 @@ import { Layout } from '@/components/layout/Layout';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input, Select } from '@/components/ui/Input';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
 const reportes = [
   {
     id: 'R001',
@@ -156,18 +154,26 @@ export default function ReportesPage() {
               <>
                 <Card>
                   <h3 className="text-lg font-bold text-gray-900 mb-4">Evolución de Créditos en Mora</h3>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <LineChart data={datosMora}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="mes" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Line type="monotone" dataKey="mora30" name="30-60 días" stroke="#f59e0b" />
-                      <Line type="monotone" dataKey="mora60" name="60-90 días" stroke="#ef4444" />
-                      <Line type="monotone" dataKey="mora90" name="90+ días" stroke="#991b1b" />
-                    </LineChart>
-                  </ResponsiveContainer>
+                  <div className="space-y-4">
+                    {datosMora.map((item) => (
+                      <div key={item.mes}>
+                        <div className="flex justify-between mb-2">
+                          <span className="text-sm font-medium text-gray-700">{item.mes}</span>
+                          <span className="text-xs text-gray-500">{item.mora30 + item.mora60 + item.mora90} créditos</span>
+                        </div>
+                        <div className="flex gap-2 h-6">
+                          <div className="flex-1 bg-yellow-400 rounded" style={{ maxWidth: `${(item.mora30 / 12) * 100}%` }} title={`30-60 días: ${item.mora30}`}></div>
+                          <div className="flex-1 bg-red-500 rounded" style={{ maxWidth: `${(item.mora60 / 12) * 100}%` }} title={`60-90 días: ${item.mora60}`}></div>
+                          <div className="flex-1 bg-red-900 rounded" style={{ maxWidth: `${(item.mora90 / 12) * 100}%` }} title={`90+ días: ${item.mora90}`}></div>
+                        </div>
+                      </div>
+                    ))}
+                    <div className="flex gap-4 text-sm pt-4 border-t">
+                      <div className="flex items-center gap-2"><div className="w-3 h-3 bg-yellow-400 rounded"></div><span>30-60 días</span></div>
+                      <div className="flex items-center gap-2"><div className="w-3 h-3 bg-red-500 rounded"></div><span>60-90 días</span></div>
+                      <div className="flex items-center gap-2"><div className="w-3 h-3 bg-red-900 rounded"></div><span>90+ días</span></div>
+                    </div>
+                  </div>
                 </Card>
 
                 <Card className="bg-red-50 border-red-200">
@@ -196,24 +202,24 @@ export default function ReportesPage() {
             {selectedReport.tipo === 'creditos' && (
               <Card>
                 <h3 className="text-lg font-bold text-gray-900 mb-4">Distribución de Créditos por Tipo</h3>
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart
-                    data={[
-                      { tipo: 'Ordinario', cantidad: 450, monto: 2250000 },
-                      { tipo: 'Emergente', cantidad: 220, monto: 1650000 },
-                      { tipo: 'Décimos', cantidad: 180, monto: 720000 },
-                      { tipo: 'Utilidades', cantidad: 120, monto: 480000 },
-                    ]}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="tipo" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="cantidad" name="Cantidad" fill="#0891b2" />
-                    <Bar dataKey="monto" name="Monto ($)" fill="#10b981" />
-                  </BarChart>
-                </ResponsiveContainer>
+                <div className="space-y-4">
+                  {[
+                    { tipo: 'Ordinario', cantidad: 450, monto: 2250000, color: 'bg-cyan-500' },
+                    { tipo: 'Emergente', cantidad: 220, monto: 1650000, color: 'bg-green-500' },
+                    { tipo: 'Décimos', cantidad: 180, monto: 720000, color: 'bg-yellow-500' },
+                    { tipo: 'Utilidades', cantidad: 120, monto: 480000, color: 'bg-purple-500' },
+                  ].map((item) => (
+                    <div key={item.tipo}>
+                      <div className="flex justify-between mb-2">
+                        <span className="text-sm font-medium text-gray-700">{item.tipo}</span>
+                        <span className="text-xs text-gray-500">{item.cantidad} créditos - ${(item.monto / 1000000).toFixed(1)}M</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div className={`${item.color} h-3 rounded-full`} style={{ width: `${(item.cantidad / 450) * 100}%` }}></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </Card>
             )}
 
