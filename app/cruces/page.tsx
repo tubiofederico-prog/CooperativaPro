@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+
 import { Layout } from '@/components/layout/Layout';
 import { Card, StatCard } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';

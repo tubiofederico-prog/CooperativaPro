@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+
 import { useRouter } from 'next/navigation';
 import { Layout } from '@/components/layout/Layout';
 import { Card } from '@/components/ui/Card';
